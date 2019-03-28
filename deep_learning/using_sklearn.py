@@ -10,12 +10,12 @@ from sklearn.metrics import accuracy_score
 def _run(filepath):
     data = pickle.load(open(filepath, "rb"))
     x_train, y_train, x_test, y_test = data["x_train"], data["y_train"], data["x_test"], data["y_test"]
-    vector = HashingVectorizer(stop_words="english", binary=False, n_features=4)
+    vector = HashingVectorizer(stop_words="english", binary=True)
     transformed_x_train = vector.fit_transform(x_train)
     transformed_x_test = vector.fit_transform(x_test)
 
     '''DecisionTreeClassifier'''
-    dtc_classifier = DecisionTreeClassifier(criterion="entropy")
+    dtc_classifier = DecisionTreeClassifier(criterion="gini")
 
     # fit the transformed data
     dtc_classifier.fit(X=transformed_x_train,y=y_train)
@@ -35,7 +35,10 @@ def _run(filepath):
 
 
     '''Accuracy'''
-    print_accuracy(dtc_pred, y_test)
+    print_accuracy(nb_pred, y_test)
+
+    # DecisionTreeClassifier --> The accuracy for this classifier:	0.8645118288796274
+    # BernoulliNB -->  The accuracy for this classifier:	0.8380500735474381
 
 
 def print_accuracy(y_pred, y_true):
