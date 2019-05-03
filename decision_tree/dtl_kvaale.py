@@ -229,35 +229,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-'''
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 2	 |	 Predicted: 1	 |	 Hit: False
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 2	 |	 Predicted: 2	 |	 Hit: True
-Actual: 2	 |	 Predicted: 2	 |	 Hit: True
-Actual: 2	 |	 Predicted: 2	 |	 Hit: True
-Actual: 2	 |	 Predicted: 2	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 2	 |	 Predicted: 1	 |	 Hit: False
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 2	 |	 Predicted: 2	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-Actual: 1	 |	 Predicted: 1	 |	 Hit: True
-'''
-                           
-
