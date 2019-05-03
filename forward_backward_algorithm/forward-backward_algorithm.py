@@ -22,8 +22,8 @@ O = np.array([
 def normalize(v, desired_sum=1):
     '''
     Normalizes v
-    :param v:   numpy.ndarray # A vector
-    :return:    numpy.ndarray # Normalized vector
+    :param v:   numpy.ndarray   # A vector
+    :return:    numpy.ndarray   # Normalized vector
     '''
     return v*(desired_sum/np.sum(v))
 
@@ -31,12 +31,12 @@ def normalize(v, desired_sum=1):
 # Compute P(Z_k, x_1:x_k)
 def forward(fv, ev):
     """
-    Equation 15.12 in the book
+    Equation 15.5 + 15.12 in the book
     :param fv:  numpy.ndarray    # forward vector
     :param ev:  numpy.ndarray    # evidence vector
     :return:    numpy.ndarray
     """
-    # return normalize(O[ev].dot(T.T.dot(fv)))   # if 1-D arrays
+    #return normalize(O[ev].dot(T.T.dot(fv)))   # if 1-D arrays
     return normalize(O[ev] @ T @ fv)            # 2-D arrays
 
 
@@ -48,8 +48,8 @@ def backward(bv, ev):
     :param ev:  numpy.ndarray    # evidence vector
     :return:    numpy.ndarray
     """
-    #return T.dot(O[ev].dot(bv))    # 1-D arrays
-    return (T @ O[ev] @ bv)         # 2-D Arrays
+    #return T.dot(O[ev].dot(bv      # 1-D arrays
+    return normalize(T @ O[ev] @ bv)         # 2-D Arrays
 
 
 
@@ -62,23 +62,29 @@ def fb(prior, ev):
       P(Z_k | Z_(k+1))
       P(Z_1)
     :param ev:      numpy.ndarray   # evidence vector
-    :param prior:   numpy.ndarray # prior probability = [0.5, 0.5]
+    :param prior:   numpy.ndarray   # prior probability = [0.5, 0.5]
     :return:        numpy.ndarray
     '''
     fv = [prior] #forward vec
-    bv = np.array([1, 1]) # initialize backward vec
+    bv = np.array([1.0, 1.0]) # initialize backward vec
     sv = [] # smoothing vec
     N = len(ev) # amount of evidence
 
     fv[0] = prior
+    print("Normalized forward messages:")
+    print("{}:\t|\t{}\t|\t{}\t|".format("k", "YES", "NO"))
+    print("-----------------------------------------")
     for i in range(1,N+1):
         fv.append(forward(fv[i-1], ev[i-1]))
+        print("f_{}:\t|\t{}\t|\t{}\t|".format(i, round(fv[i][0],3), round(fv[i][1],3)))
 
-    print("Backward messages:")
-    for i in range(N-1, -1, -1):
+    print("\nNormalized backward messages:")
+    print("{}:\t|\t{}\t|\t{}\t|".format("k","YES","NO"))
+    print("-----------------------------------------")
+    for i in range(ev.shape[0]-1, -1, -1):
+        print("b_{}:\t|\t{}\t|\t{}\t|".format(i+1, round(bv[0],3), round(bv[1],3)))
         sv.append(normalize(fv[i+1] * bv))
         bv = backward(bv, ev[i])
-        print("b:{} --> {}".format(i+1, bv))
     return sv
 
 
@@ -95,7 +101,7 @@ def run_forward(fv, ev):
     print("The probability of rain over a period of {} day(s)".format(N))
     for i in range(N):
         f_copy = forward(f_copy, ev[i])
-        print("Day {}: {}".format(i+1, f_copy))
+        print("Day {}: {}\t Rain? {}".format(i+1, f_copy, rain_status(f_copy)))
 
 
 # TASK C
@@ -110,8 +116,12 @@ def run_forward_backward(fv, ev):
     N = len(ev)
     print("\nThe probability of rain over a period of {} day(s)".format(N))
     for i in range(N):
-        print("Day {}: {}".format(i+1, sv[i]))
+        print("Day {}: {}\tRain? {}".format(i+1, sv[i], rain_status(sv[i])))
 
+
+def rain_status(sv):
+    # Determine 'probabilistically' if it is going to rain. If 50/50 --> it's still gonna rain, boy
+    return "YES" if sv[0] >= sv[1] else "NO"
 
 
 def main():
@@ -119,19 +129,19 @@ def main():
     B = np.array([1, 1, 0, 1, 1])  # 1 = True, 0 = False
 
     # Probability for rain at init
-    PRIOR = np.array([0.5, 0.5])  # Assumes equal prob for rain or no.
+    prior = np.array([0.5, 0.5])  # Assumes equal prob for rain or no.
 
-    print(" * * * PART B * * * ")
-    print("2 days...")
-    run_forward(PRIOR, B[0:2])
-    print("\n5 days...")
-    run_forward(PRIOR, B)
+    print("T A S K: B\nFiltering by using the FORWARD operation")
+    print("\n...2 days...")
+    run_forward(prior, B[0:2])
+    print("\n...5 days...")
+    run_forward(prior, B)
 
-    print("\n * * * PART C * * * ")
-    print("2 days...")
-    run_forward_backward(PRIOR, B[0:2])
-    print("\n5 days...")
-    run_forward_backward(PRIOR, B)
+    print("\nT A S K: C\nSmoothing using the FORWARD-BACKWARD algorithm ")
+    print("\n...2 days...")
+    run_forward_backward(prior, B[0:2])
+    print("\n...5 days...")
+    run_forward_backward(prior, B)
 
 
 if __name__ == "__main__":
