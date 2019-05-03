@@ -1,5 +1,6 @@
 from random import randint, choice
 from math import log
+from sys import argv
 
 
 class DecisionNode:
@@ -166,14 +167,14 @@ def predict(example, tree):
 def print_tree(tree, spacing=""):
     '''Just a printing method'''
     if type(tree) is not DecisionNode:
-       print(spacing + "Predicts: ", tree)
+       print(spacing + "| --> Predicts: ", tree)
        return
-    print(spacing + "Attribute: " + str(tree.attribute))
+    print(spacing + "| Attribute: " + str(tree.attribute))
 
-    print(spacing + "| --> Value 1")
+    print(spacing + "| --> Value: 1")
     print_tree(tree.subtree[1], spacing + "|\t\t")
 
-    print(spacing + "| --> Value 2")
+    print(spacing + "| --> Value: 2")
     print_tree(tree.subtree[2], spacing + "|\t\t")
 
 
@@ -191,11 +192,10 @@ def read_data(path, filename):
         return training_data
 
 
-
 # M a i n
 def main():
     # Choose between "infogain" and "random"
-    importance = "infoGain"
+    imprtnc = argv[1].lower()
     
     attributes = range(0,7) # [0, 1, 2, 3, 4, 5, 6]
     
@@ -206,7 +206,7 @@ def main():
     testing_data = read_data(path, 'test.txt')
 
     # Build Tree
-    tree = decision_tree_learning(training_data, attributes, training_data, func=importance.lower())
+    tree = decision_tree_learning(training_data, attributes, training_data, func=imprtnc)
     #for values in tree.subtree.values():
     #    print("value",values)
     print_tree(tree)
@@ -216,18 +216,48 @@ def main():
     print("\n\nTrained on {} examples\t-->\ttesting on {} examples\n".format(len(training_data), len(testing_data)))
     for example in testing_data:
         pred = predict(example, tree)
-        print("Actual: {}\t |\t Predicted: {}".format(example[-1], pred))
+        print("Actual: {}\t |\t Predicted: {}\t |\t Hit: {}".format(example[-1], pred, (bool(example[-1]==pred))))
         if pred == example[-1]:
             matches += 1
 
     accuracy = matches/len(testing_data)
     missed = len(testing_data) - matches
-    print("\nMissed:\t\t{}\nMatches:\t{}\nAccuracy:\t{} %\n\nUsing the '{}' importance function".format(missed, matches, accuracy*100, importance.lower()))
+    print("\nMissed:\t\t{}\nMatches:\t{}\nAccuracy:\t{} %\n\nUsing the '{}' as importance function".format(missed, matches, accuracy*100, imprtnc))
 
 
 
 if __name__ == '__main__':
     main()
 
+'''
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 2	 |	 Predicted: 1	 |	 Hit: False
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 2	 |	 Predicted: 2	 |	 Hit: True
+Actual: 2	 |	 Predicted: 2	 |	 Hit: True
+Actual: 2	 |	 Predicted: 2	 |	 Hit: True
+Actual: 2	 |	 Predicted: 2	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 2	 |	 Predicted: 1	 |	 Hit: False
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 2	 |	 Predicted: 2	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+Actual: 1	 |	 Predicted: 1	 |	 Hit: True
+'''
                            
 
